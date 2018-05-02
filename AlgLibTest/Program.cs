@@ -10,10 +10,15 @@ namespace AlgLibTest
    {
       static void Main(string[] args)
       {
-         RegressionTest.LinearRegressionTest();
+         //RegressionTest.LinearRegressionTest();
 
+         GaussianFitting.Test();
+
+         System.Console.ReadLine();
 
       }
+
+
       public class func_4
       {
          private double[] _coeffs = new double[] {0, 0, 0, 0};
@@ -46,7 +51,7 @@ namespace AlgLibTest
                return input*(1 - d/0.5*pct);
          }
 
-         public static int LinearRegressionTest()
+         public static void LinearRegressionTest()
          {
             // In       this example we demonstrate linear fitting by y = a0X0 + a1X1 + a2X2 + a3
             double[,] xy = new double[,]{
@@ -129,9 +134,7 @@ namespace AlgLibTest
                }
             }
 
-
-            System.Console.ReadLine();
-            return 0;
+            System.Console.WriteLine("---------  Test completed  --------");
          }
 
       }

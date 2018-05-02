@@ -49,6 +49,7 @@
     <Compile Include="dataanalysis.cs" />
     <Compile Include="diffequations.cs" />
     <Compile Include="fasttransforms.cs" />
+    <Compile Include="GaussianFitting.cs" />
     <Compile Include="integration.cs" />
     <Compile Include="interpolation.cs" />
     <Compile Include="linalg.cs" />
