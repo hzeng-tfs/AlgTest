@@ -42,23 +42,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="alglibinternal.cs" />
-    <Compile Include="alglibmisc.cs" />
-    <Compile Include="alglib_info.cs" />
-    <Compile Include="ap.cs" />
-    <Compile Include="dataanalysis.cs" />
-    <Compile Include="diffequations.cs" />
-    <Compile Include="fasttransforms.cs" />
+    <Compile Include="AlgLib\alglibinternal.cs" />
+    <Compile Include="AlgLib\alglibmisc.cs" />
+    <Compile Include="AlgLib\alglib_info.cs" />
+    <Compile Include="AlgLib\ap.cs" />
+    <Compile Include="AlgLib\dataanalysis.cs" />
+    <Compile Include="AlgLib\diffequations.cs" />
+    <Compile Include="AlgLib\fasttransforms.cs" />
     <Compile Include="GaussianFitting.cs" />
-    <Compile Include="integration.cs" />
-    <Compile Include="interpolation.cs" />
-    <Compile Include="linalg.cs" />
-    <Compile Include="optimization.cs" />
+    <Compile Include="AlgLib\integration.cs" />
+    <Compile Include="AlgLib\interpolation.cs" />
+    <Compile Include="AlgLib\linalg.cs" />
+    <Compile Include="AlgLib\optimization.cs" />
+    <Compile Include="LinearRegression.cs" />
+    <Compile Include="Matrix.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="solvers.cs" />
-    <Compile Include="specialfunctions.cs" />
-    <Compile Include="statistics.cs" />
+    <Compile Include="AlgLib\solvers.cs" />
+    <Compile Include="AlgLib\specialfunctions.cs" />
+    <Compile Include="AlgLib\statistics.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
