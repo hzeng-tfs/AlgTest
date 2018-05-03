@@ -10,11 +10,17 @@ namespace AlgLibTest
    {
       static void Main(string[] args)
       {
-         //RegressionTest.LinearRegressionTest();
+         Console.WriteLine("---------  Start of Linear Regression Test  --------");
+         Console.WriteLine("---  Y = c0*X0 + c1*X1 + c2*X2 + c4  --------");
+         RegressionTest.LinearRegressionTest();
+         Console.WriteLine("---------  End of Test --------\n");
 
+         Console.WriteLine("---------  Start of Gaussian Fitting Test  --------");
          GaussianFitting.Test();
+         GaussianFitting.SpecTest();
+         Console.WriteLine("---------  End of Test --------\n");
 
-         System.Console.ReadLine();
+         Console.ReadLine();
 
       }
 
@@ -79,7 +85,7 @@ namespace AlgLibTest
             }
             sb.Append("\n");
 
-            double[] noiseLevels = new double[] {0, 0.02, 0.05, 0.1, 0.2};
+            double[] noiseLevels = new double[] {0, 0.02, 0.05, 0.1};
             foreach (double noiseLevel in noiseLevels) {
                //add noise
                for (int i=0; i<xy.GetLength(0); i++) {
@@ -90,13 +96,13 @@ namespace AlgLibTest
                }
 
 
-               System.Console.Write("\nNoise Level up to {0:P} and bad data @ 7th\n", noiseLevel);
-               System.Console.Write(sb.ToString());
-               System.Console.Write("value+noise  :");
+               Console.Write("\nNoise Level up to {0:P} and bad data @ every 7th out of 10\n", noiseLevel);
+               Console.Write(sb.ToString());
+               Console.Write("value+noise  :");
                for (int i=0; i<xy.GetLength(0); i++) {
-                  System.Console.Write("{0,8:N3} ", xy[i,3]);
+                  Console.Write("{0,8:N3} ", xy[i,3]);
                }
-               System.Console.Write("\n");
+               Console.Write("\n");
 
                int errorCode;
                int nvars;  //number of independent variables
@@ -109,32 +115,31 @@ namespace AlgLibTest
                if (errorCode == 1) { // EXPECTED: 1 (if subroutine successfully finished)
                   alglib.lrunpack(model, out coefficients, out nvars);  //Unpacks coefficients from linear model.
                   func_4 fittedFunc = new func_4(coefficients);
-                  System.Console.Write("fitted result:");
+                  Console.Write("fitted result:");
                   for (int i = 0; i<xy.GetLength(0); i++) {
-                     System.Console.Write("{0,8:N3} ", fittedFunc.Result(xy[i, 0], xy[i, 1], xy[i, 2]));
+                     Console.Write("{0,8:N3} ", fittedFunc.Result(xy[i, 0], xy[i, 1], xy[i, 2]));
                   }
-                  System.Console.Write("\n");
+                  Console.Write("\n");
 
-                  System.Console.WriteLine("expecting         : {0}", func.PrintCoeffs()); 
-                  System.Console.WriteLine("regression results: {0}", alglib.ap.format(coefficients, 4)); 
+                  Console.WriteLine("expecting         : {0}", func.PrintCoeffs()); 
+                  Console.WriteLine("regression results: {0}", alglib.ap.format(coefficients, 4)); 
 
-                  //System.Console.WriteLine("covariation matrix {0}", alglib.ap.format(report.c, 4)); 
-                  System.Console.WriteLine("{0,8:N5} RMSError (root mean square error on a training set)", report.rmserror);
-                  System.Console.WriteLine("{0,8:N5} AvgError (average error on a training set)", report.avgerror);
-                  System.Console.WriteLine("{0,8:N5} AvgRelError (average relative error on a training set(excluding observations with zero function value)", report.avgrelerror);
-                  System.Console.WriteLine("{0,8:N5} CVRMSError (leave-one-out cross-validation estimate of generalization error)", report.cvrmserror);
-                  System.Console.WriteLine("{0,8:N5} CVAvgError (cross-validation estimate of average error)", report.cvavgerror);
-                  System.Console.WriteLine("{0,8:N5} CVAvgRelError (cross-validation estimate of average relative error)", report.cvavgrelerror);
+                  //Console.WriteLine("covariation matrix {0}", alglib.ap.format(report.c, 4)); 
+                  Console.WriteLine("{0,8:N5} RMSError (root mean square error on a training set)", report.rmserror);
+                  Console.WriteLine("{0,8:N5} AvgError (average error on a training set)", report.avgerror);
+                  Console.WriteLine("{0,8:N5} AvgRelError (average relative error on a training set(excluding observations with zero function value)", report.avgrelerror);
+                  Console.WriteLine("{0,8:N5} CVRMSError (leave-one-out cross-validation estimate of generalization error)", report.cvrmserror);
+                  Console.WriteLine("{0,8:N5} CVAvgError (cross-validation estimate of average error)", report.cvavgerror);
+                  Console.WriteLine("{0,8:N5} CVAvgRelError (cross-validation estimate of average relative error)", report.cvavgrelerror);
                }
                else {
-                  System.Console.WriteLine("math function returns error code {0}", errorCode);
-                  System.Console.WriteLine("*-255, in case of unknown internal error");
-                  System.Console.WriteLine("*  -4, if internal SVD subroutine haven't converged");
-                  System.Console.WriteLine("*  -1, if incorrect parameters was passed(NPoints<NVars+2, NVars<1).");
+                  Console.WriteLine("math function returns error code {0}", errorCode);
+                  Console.WriteLine("*-255, in case of unknown internal error");
+                  Console.WriteLine("*  -4, if internal SVD subroutine haven't converged");
+                  Console.WriteLine("*  -1, if incorrect parameters was passed(NPoints<NVars+2, NVars<1).");
                }
             }
 
-            System.Console.WriteLine("---------  Test completed  --------");
          }
 
       }
