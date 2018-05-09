@@ -86,12 +86,13 @@ namespace AlgLibTest
             Console.Write("\n");
 
             int errorCode;
-            int nvars;  //number of independent variables
+            int nvars = 3;  //number of independent variables
+            int npoints = xy.GetLength(0);
             alglib.linearmodel model;
             alglib.lrreport report;
             double[] coefficients;
 
-            alglib.lrbuild(xy, xy.GetLength(0), 3, out errorCode, out model, out report);
+            alglib.lrbuild(xy, npoints, nvars, out errorCode, out model, out report);
 
             if (errorCode == 1) { // EXPECTED: 1 (if subroutine successfully finished)
                alglib.lrunpack(model, out coefficients, out nvars);  //Unpacks coefficients from linear model.

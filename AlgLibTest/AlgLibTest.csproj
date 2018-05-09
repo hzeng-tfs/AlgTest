@@ -61,6 +61,7 @@
     <Compile Include="AlgLib\solvers.cs" />
     <Compile Include="AlgLib\specialfunctions.cs" />
     <Compile Include="AlgLib\statistics.cs" />
+    <Compile Include="PSM500Test.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

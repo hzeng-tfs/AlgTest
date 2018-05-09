@@ -20,6 +20,11 @@ namespace AlgLibTest
          GaussianFitting.SpecTest();
          Console.WriteLine("---------  End of Test --------\n");
 
+
+         Console.WriteLine("---------  Start of PSM500 data Test  --------");
+         PSM500Test.Test();
+         Console.WriteLine("---------  End of Test --------\n");
+
          Console.ReadLine();
 
       }
