@@ -15,14 +15,18 @@ namespace AlgLibTest
          LinearRegression.LinearRegressionTest();
          Console.WriteLine("---------  End of Test --------\n");
 
+         Console.WriteLine("---------  Start of PSM500 data Test  --------");
+         PSM500Test.Test();
+         Console.WriteLine("---------  End of Test --------\n");
+
          Console.WriteLine("---------  Start of Gaussian Fitting Test  --------");
-         GaussianFitting.Test();
+         //GaussianFitting.Test();
          GaussianFitting.SpecTest();
          Console.WriteLine("---------  End of Test --------\n");
 
 
-         Console.WriteLine("---------  Start of PSM500 data Test  --------");
-         PSM500Test.Test();
+         Console.WriteLine("---------  Start of Math.Net Gaussian Fitting Test  --------");
+         MathnetGaussianFitting.SpecTest();
          Console.WriteLine("---------  End of Test --------\n");
 
          Console.ReadLine();

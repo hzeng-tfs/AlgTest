@@ -8,6 +8,12 @@ namespace AlgLibTest
 {
    class GaussianFitting
    {
+      public static string ToTokenSeparatedString<TSource>(IEnumerable<TSource> source, string token = ",")
+      {
+         //return source == null ? "" : string.Join(token, source);
+         return source == null ? "" : string.Join(token, source.Select(d => $"{d,7:F2}"));
+      }
+
       /// this callback calculates Gaussian function f(c,x) = c0 + c1*EXP[-(x-c2)^2/2*c3^2]
       /// c0, c1, c2 and c3 are the background, amplitude, centre and width of the Gaussians.
       /// where x is a position on X-axis and c is adjustable parameter
@@ -50,15 +56,14 @@ namespace AlgLibTest
       private static void PrintResults(double[] c, int errorCode, alglib.lsfitreport report)
       {
          if (errorCode == 2) { // fitting successfully
-            Console.WriteLine("fitting coefficients: {0}", alglib.ap.format(c, 1)); // EXPECTED: [1.5]
-            Console.WriteLine();
+            Console.WriteLine("fitting coefficients: {0}", ToTokenSeparatedString<double>(c, ", ")); // EXPECTED: [1.5]
+            //Console.WriteLine();
             Console.WriteLine("{0,8:N5} R2          non-adjusted coefficient of determination (non-weighted)", report.r2);
             Console.WriteLine("{0,8:N5} RMSError    rms error on the(X, Y).", report.rmserror);
             Console.WriteLine("{0,8:N5} AvgError    average error on the(X, Y).", report.avgerror);
             Console.WriteLine("{0,8:N5} AvgRelError average relative error on the non-zero Y", report.avgrelerror);
             Console.WriteLine("{0,8:N5} MaxError    maximum error NON-WEIGHTED ERRORS ARE CALCULATED", report.maxerror);
             Console.WriteLine("{0,8:N5} WRMSError   weighted rms error on the(X, Y).", report.wrmserror);
-
          }
          else {
             Console.WriteLine("fitting returns error code {0}", errorCode);
@@ -69,7 +74,7 @@ namespace AlgLibTest
             Console.WriteLine(" 5 MaxIts steps was taken");
             Console.WriteLine(" 7 stopping conditions are too stringent, further improvement is impossible");
          }
-         Console.WriteLine();
+         //Console.WriteLine();
       }
 
 
@@ -127,31 +132,6 @@ namespace AlgLibTest
          }
       }
 
-      //from spectra file 20160628_145212.csv
-      // according spectra file, the first count value (32) is at bin 475
-      private static int _beginFeKaFull = 475;
-      private static double[] _peakFeKaFull = new double[] {32, 44, 43, 50, 41, 53, 43, 50, 51, 67, 82, 90, 103, 138, 210, 311, 400, 523, 698, 886,
-                                       1245, 1532, 1882, 2152, 2350, 2629, 2745, 2718, 2578, 2329, 2075, 1750, 1527, 1196, 876,
-                                       633, 466, 286, 204, 135, 81, 38, 17, 28, 12, 10, 10, 13 };
-
-      private static int _beginFeKaPartial = 491;  //first count (400) is at bin 491
-      private static double[] _peakFeKaPartial = new double[] {400, 523, 698, 886,
-                                       1245, 1532, 1882, 2152, 2350, 2629, 2745, 2718, 2578, 2329, 2075, 1750, 1527, 1196, 876,
-                                       633, 466 };
-
-      private static int _beginBrKaFull = 816;
-      private static double[] _peakBrKaFull = new double[] {19, 11, 11, 19, 23, 22, 15, 25, 20, 27,
-        28, 38, 34, 29, 44, 58, 55, 74, 104, 122, 145, 195, 227, 309, 378, 464, 476, 477, 613, 575, 616, 641, 580, 551, 522, 468, 439,
-        359, 286, 256, 183, 129, 105, 95, 78, 46, 42, 31, 26, 17, 17, 17, 7, 20, 14, 18, 11, 18, 11, 15, 17, 14 };
-
-      private static int _beginBrKaPartial = 835;
-      private static double[] _peakBrKaPartial = new double[] {122, 145, 195, 227, 309, 378, 464, 476, 477, 613, 575, 616, 641, 580, 551, 522, 468, 439,
-        359, 286, 256, 183, 129, 105};
-
-      private static int _beginPuLbRayPartial = 1206;
-      private static double[] _peakPuLbRayPartial = new double[] {51, 56, 80, 83, 88, 97, 118, 120, 151, 155, 196, 205, 233, 254, 303, 283, 320,
-        318, 316, 297, 305, 268, 280, 239, 237, 184, 191, 138, 109, 76, 85, 56, 63, 40, 33, 19, 18, 20, 14, 20, 11};
-
 
 
       public static void SpecTest(double[] realY, int begin, double ctrd, double fwhm)
@@ -173,8 +153,10 @@ namespace AlgLibTest
 
          //double[] c = new double[]{0, 100, 0, 5};  //bad initial guess gives bad results
          double[] c = new double[]{0, max, maxPos, 8};  //initial guess, also the final results
-         Console.WriteLine("initial guess is    : {0}", alglib.ap.format(c, 1));
+         //Console.WriteLine("initial guess is    : {0}", alglib.ap.format(c, 2));
+         Console.WriteLine("initial guess is    : {0}", ToTokenSeparatedString<double>(c, ", "));
 
+         var watch = System.Diagnostics.Stopwatch.StartNew();
          alglib.lsfitstate state;
          alglib.lsfitcreatefg(realX, realY, c, true, out state);    //using function values and gradient
 
@@ -184,6 +166,8 @@ namespace AlgLibTest
          alglib.lsfitsetcond(state, epsx, maxits);
 
          alglib.lsfitfit(state, GaussianFunc, GaussianFuncGrad, null, null);
+         watch.Stop();
+         Console.WriteLine($"Algorithm takes: {watch.ElapsedTicks} ticks {watch.ElapsedTicks * 1000.0d / System.Diagnostics.Stopwatch.Frequency:F3} ms");
 
          //get results from fitting
          int errorCode;  //info: completion code, 2 is good
@@ -202,21 +186,22 @@ namespace AlgLibTest
 
       public static void SpecTest()
       {
-         Console.WriteLine("-----------  Testing with real spectrum: FeKa full peak, strong, PeakWidth={0}-----------------", _peakBrKaFull.Length);
-         SpecTest(_peakFeKaFull, _beginFeKaFull, 501.91, 11.73);
+         Console.WriteLine($"-----------  Testing with real spectrum: FeKa full peak, strong, PeakWidth={TestData.FeKaFull.spectrum.Length}-----------------");
+         SpecTest(TestData.FeKaFull.spectrum, TestData.FeKaFull.binOffset, TestData.FeKaFull.ctrd, TestData.FeKaFull.fwhm);
 
-         Console.WriteLine("\n--------------  Testing with real spectrum: FeKa partial peak, strong, PeakWidth={0}-----------------", _peakFeKaPartial.Length);
-         SpecTest(_peakFeKaPartial, _beginFeKaPartial, 501.91, 11.73);
+         Console.WriteLine($"\n--------------  Testing with real spectrum: FeKa partial peak, strong, PeakWidth={TestData.FeKaPartial.spectrum.Length}-----------------");
+         SpecTest(TestData.FeKaPartial.spectrum, TestData.FeKaPartial.binOffset, TestData.FeKaPartial.ctrd, TestData.FeKaPartial.fwhm);
 
-         Console.WriteLine("\n--------------  Testing with real spectrum: BrKa full peak, weak, PeakWidth={0}-----------------", _peakBrKaFull.Length);
-         SpecTest(_peakBrKaFull, _beginBrKaFull, 846.88, 15.17);
+         Console.WriteLine($"\n--------------  Testing with real spectrum: BrKa full peak, weak, PeakWidth={TestData.BrKaFull.spectrum.Length}-----------------");
+         SpecTest(TestData.BrKaFull.spectrum, TestData.BrKaFull.binOffset, TestData.BrKaFull.ctrd, TestData.BrKaFull.fwhm);
 
-         Console.WriteLine("\n--------------  Testing with real spectrum: BrKa Partial peak, weak, PeakWidth={0}-----------------", _peakBrKaPartial.Length);
-         SpecTest(_peakBrKaPartial, _beginBrKaPartial, 846.88, 15.17);
+         Console.WriteLine($"\n--------------  Testing with real spectrum: BrKa Partial peak, weak, PeakWidth={TestData.BrKaPartial.spectrum.Length}-----------------");
+         SpecTest(TestData.BrKaPartial.spectrum, TestData.BrKaPartial.binOffset, TestData.BrKaPartial.ctrd, TestData.BrKaPartial.fwhm);
 
-         Console.WriteLine("\n--------------  Testing with real spectrum: PuLbRay Partial peak, very weak, PeakWidth={0}-----------------", _peakPuLbRayPartial.Length);
-         SpecTest(_peakPuLbRayPartial, _beginPuLbRayPartial, 1224.22, 16.32);
+         Console.WriteLine($"\n--------------  Testing with real spectrum: PuLbRay Partial peak, failed fitting very weak, PeakWidth={TestData.PuLbRayPartial.spectrum.Length}-----------------");
+         SpecTest(TestData.PuLbRayPartial.spectrum, TestData.PuLbRayPartial.binOffset, TestData.PuLbRayPartial.ctrd, TestData.PuLbRayPartial.fwhm);
       }
 
    }
+
 }
