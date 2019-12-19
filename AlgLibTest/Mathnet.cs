@@ -106,16 +106,19 @@ namespace AlgLibTest
                            $"exit={result.ReasonForExit}; iterations={result.Iterations}");
          Console.WriteLine("results are     : {0}", ToTokenSeparatedString<double>(result.MinimizingPoint, ", "));
          Console.WriteLine("StdErrors are   : {0}", ToTokenSeparatedString<double>(result.StandardErrors, ", "));
+         //Console.WriteLine("MinimizedValues : {0}", ToTokenSeparatedString<double>(result.MinimizedValues, ", "));
+         Console.WriteLine("chi-square      : {0}", chisquare(YValues, result.MinimizedValues));
 
          const double ratio = 2.35482;    //  fwhm = 2*sqrt(2*ln(2))*a3 = 2.35482*a3
          Console.WriteLine("Math.NET  result: Ctrd = {0,8:N2}, FWHM = {1,8:N2}", result.MinimizingPoint[2], result.MinimizingPoint[3] * ratio);
          Console.WriteLine("WinISA NR result: Ctrd = {0,8:N2}, FWHM = {1,8:N2}", sample.ctrd, sample.fwhm);
       }
+
       public static void SpecTest()
       {
-         SpecTest(TestData.FeKaFull);
+         SpecTest(TestData.FeKbFull);
 
-         SpecTest(TestData.FeKaPartial);
+         SpecTest(TestData.FeKbPartial);
 
          SpecTest(TestData.BrKaFull);
 
@@ -126,6 +129,28 @@ namespace AlgLibTest
          SpecTest(TestData.CrKaNoGaussianFitting);
       }
 
+
+      // Note:
+      // - Math.NET doesn't provide chi-square on LevenbergMarquardtMinimizer
+      // - need to calculated by ourselves
+      //    * https://docs.microsoft.com/en-us/archive/msdn-magazine/2017/march/test-run-chi-squared-goodness-of-fit-using-csharp
+      //    * possible helper: result.MinimizedValues
+
+      public static double chisquare(Vector<double> observed, Vector<double> expected)
+      {
+         double sum = 0.0;
+         double integral = 0.0;
+         if (observed.Count != 0 && observed.Count == expected.Count) {
+            for (int i=0; i<observed.Count; i++) {
+               if (expected[i] != 0) {
+                  sum += ((observed[i] - expected[i]) *(observed[i] - expected[i])) / expected[i];
+                  integral += observed[i];
+               }
+            }
+            //sum = Math.Sqrt(sum / integral);
+         }
+         return sum;
+      }
    }
 
    class MathNetRegression

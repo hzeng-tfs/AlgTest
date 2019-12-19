@@ -11,7 +11,8 @@ namespace AlgLibTest
       public static string ToTokenSeparatedString<TSource>(IEnumerable<TSource> source, string token = ",")
       {
          //return source == null ? "" : string.Join(token, source);
-         return source == null ? "" : string.Join(token, source.Select(d => $"{d,7:F2}"));
+         //return source == null ? "" : string.Join(token, source.Select(d => $"{d,7:F2}"));
+         return source == null ? "" : string.Join(token, source.Select(d => $"{d:F}"));
       }
 
       /// this callback calculates Gaussian function f(c,x) = c0 + c1*EXP[-(x-c2)^2/2*c3^2]
@@ -186,11 +187,11 @@ namespace AlgLibTest
 
       public static void SpecTest()
       {
-         Console.WriteLine($"-----------  Testing with real spectrum: FeKa full peak, strong, PeakWidth={TestData.FeKaFull.spectrum.Length}-----------------");
-         SpecTest(TestData.FeKaFull.spectrum, TestData.FeKaFull.binOffset, TestData.FeKaFull.ctrd, TestData.FeKaFull.fwhm);
+         Console.WriteLine($"-----------  Testing with real spectrum: FeKb full peak, strong, PeakWidth={TestData.FeKbFull.spectrum.Length}-----------------");
+         SpecTest(TestData.FeKbFull.spectrum, TestData.FeKbFull.binOffset, TestData.FeKbFull.ctrd, TestData.FeKbFull.fwhm);
 
-         Console.WriteLine($"\n--------------  Testing with real spectrum: FeKa partial peak, strong, PeakWidth={TestData.FeKaPartial.spectrum.Length}-----------------");
-         SpecTest(TestData.FeKaPartial.spectrum, TestData.FeKaPartial.binOffset, TestData.FeKaPartial.ctrd, TestData.FeKaPartial.fwhm);
+         Console.WriteLine($"\n--------------  Testing with real spectrum: FeKb partial peak, strong, PeakWidth={TestData.FeKbPartial.spectrum.Length}-----------------");
+         SpecTest(TestData.FeKbPartial.spectrum, TestData.FeKbPartial.binOffset, TestData.FeKbPartial.ctrd, TestData.FeKbPartial.fwhm);
 
          Console.WriteLine($"\n--------------  Testing with real spectrum: BrKa full peak, weak, PeakWidth={TestData.BrKaFull.spectrum.Length}-----------------");
          SpecTest(TestData.BrKaFull.spectrum, TestData.BrKaFull.binOffset, TestData.BrKaFull.ctrd, TestData.BrKaFull.fwhm);
